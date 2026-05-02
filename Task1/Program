@@ -1,0 +1,90 @@
+MODULE MainModule
+    ! Declaración de herramientas y objetos (Ajustar valores según tu estación)
+    PERS tooldata tPencil:=[TRUE,[[0,0,150],[1,0,0,0]],[1,[0,0,50],[1,0,0,0],0,0,0]];
+    PERS wobjdata wTable:=[FALSE,TRUE,"",[[1000,0,500],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
+
+    CONST speeddata vDraw:=v100;
+    CONST speeddata vAir:=v500;
+    
+    ! Target de referencia (Esquina inferior izquierda de la primera letra)
+    VAR robtarget pStart:=[[0,0,0],[0,1,0,0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]];
+
+    PROC Main()
+        ConfL \Off;
+        ConfJ \Off;
+
+        ! --- Secuencia de Dibujo ---
+        Draw_P;
+        Draw_A;
+        Draw_B;
+        Draw_L;
+        Draw_O;
+        
+        ! Retorno a Home
+        MoveJ pHome, vAir, z50, tPencil \WObj:=w0;
+    ENDPROC
+
+    PROC Draw_P()
+        ! Línea Vertical
+        MoveJ Offs(pStart,0,0,20), vAir, z10, tPencil \WObj:=wTable;
+        MoveL Offs(pStart,0,0,0), vDraw, fine, tPencil \WObj:=wTable;
+        MoveL Offs(pStart,0,100,0), vDraw, z1, tPencil;
+        ! Curva de la P (MoveC: Punto intermedio y punto final)
+        MoveC Offs(pStart,40,75,0), Offs(pStart,0,50,0), vDraw, fine, tPencil;
+        ! Levantar
+        MoveL RelTool(Offs(pStart,0,50,0),0,0,-20), vAir, z10, tPencil;
+    ENDPROC
+
+    PROC Draw_A()
+        ! Reposicionar para la A (X+60)
+        VAR robtarget pA:=Offs(pStart,60,0,0);
+        MoveJ Offs(pA,0,0,20), vAir, z10, tPencil \WObj:=wTable;
+        ! Diagonal subida
+        MoveL pA, vDraw, fine, tPencil \WObj:=wTable;
+        MoveL Offs(pA,25,100,0), vDraw, z1, tPencil;
+        ! Diagonal bajada
+        MoveL Offs(pA,50,0,0), vDraw, fine, tPencil;
+        ! Palito horizontal
+        MoveL RelTool(Offs(pA,50,0,0),0,0,-20), vAir, z10, tPencil;
+        MoveJ Offs(pA,12,40,0), vAir, z1, tPencil;
+        MoveL Offs(pA,38,40,0), vDraw, fine, tPencil;
+        MoveL RelTool(Offs(pA,38,40,0),0,0,-20), vAir, z10, tPencil;
+    ENDPROC
+
+    PROC Draw_B()
+        ! Reposicionar para la B (X+130)
+        VAR robtarget pB:=Offs(pStart,130,0,0);
+        MoveJ Offs(pB,0,0,20), vAir, z10, tPencil \WObj:=wTable;
+        ! Línea Vertical
+        MoveL pB, vDraw, fine, tPencil \WObj:=wTable;
+        MoveL Offs(pB,0,100,0), vDraw, z1, tPencil;
+        ! Curva superior
+        MoveC Offs(pB,40,75,0), Offs(pB,0,50,0), vDraw, z1, tPencil;
+        ! Curva inferior
+        MoveC Offs(pB,45,25,0), Offs(pB,0,0,0), vDraw, fine, tPencil;
+        MoveL RelTool(Offs(pB,0,0,0),0,0,-20), vAir, z10, tPencil;
+    ENDPROC
+
+    PROC Draw_L()
+        ! Reposicionar para la L (X+200)
+        VAR robtarget pL:=Offs(pStart,200,0,0);
+        MoveJ Offs(pL,0,100,20), vAir, z10, tPencil \WObj:=wTable;
+        MoveL Offs(pL,0,100,0), vDraw, z1, tPencil \WObj:=wTable;
+        MoveL pL, vDraw, z1, tPencil;
+        MoveL Offs(pL,40,0,0), vDraw, fine, tPencil;
+        MoveL RelTool(Offs(pL,40,0,0),0,0,-20), vAir, z10, tPencil;
+    ENDPROC
+
+    PROC Draw_O()
+        ! Reposicionar para la O (X+260)
+        VAR robtarget pO:=Offs(pStart,260,0,0);
+        MoveJ Offs(pO,20,100,20), vAir, z10, tPencil \WObj:=wTable;
+        ! Iniciar en la parte superior del círculo
+        MoveL Offs(pO,25,100,0), vDraw, fine, tPencil \WObj:=wTable;
+        ! Media circunferencia derecha
+        MoveC Offs(pO,50,50,0), Offs(pO,25,0,0), vDraw, z1, tPencil;
+        ! Media circunferencia izquierda
+        MoveC Offs(pO,0,50,0), Offs(pO,25,100,0), vDraw, fine, tPencil;
+        MoveL RelTool(Offs(pO,25,100,0),0,0,-20), vAir, z10, tPencil;
+    ENDPROC
+ENDMODULE
